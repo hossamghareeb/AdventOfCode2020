@@ -41,6 +41,7 @@ func solvePart1(len: Int = 25) -> Int {
 
 let X = solvePart1()
 // answer 23278925
+print(X)
 
 func solvePart2(target: Int) -> ClosedRange<Int> {
     /**
@@ -50,15 +51,15 @@ func solvePart2(target: Int) -> ClosedRange<Int> {
      */
     var sumArr = Array(repeating: 0, count: input.count)
     sumArr[0] = input[0]
+    var dict = [sumArr[0]: 0] // key: sum, value: index
     for i in 1..<input.count {
         sumArr[i] = input[i] + sumArr[i - 1]
+        dict[sumArr[i]] = i
     }
 
     for i in 0..<sumArr.count {
-        for j in (i+1)..<sumArr.count  {
-            if (sumArr[j] - sumArr[i]) == target {
-                return (i + 1)...j
-            }
+        if let j = dict[sumArr[i] + target] {
+            return (i + 1)...j
         }
     }
     fatalError("Can't find contigous set")
