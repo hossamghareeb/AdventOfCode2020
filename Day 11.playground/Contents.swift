@@ -64,40 +64,53 @@ for r in 0..<lines.count {
 }
 
 func round1(grid: inout [[Character]]) -> Bool {
+    var copy = grid
     var changed = false
     for r in 1..<(grid.count - 1) {
         for c in 1..<(grid[0].count - 1)  {
             guard grid.isFloor(i: r, j: c) == false else { continue }
-            if grid.isEmpty(i: r, j: c) && grid.occupiedAdjacentCount(i: r, j: c) < 8 {
+            if grid.isEmpty(i: r, j: c) && grid.occupiedAdjacentCount(i: r, j: c) == 0 {
                 changed = true
-                grid[r][c] = "#"
+                copy[r][c] = "#"
             }
         }
     }
-    grid.log()
+//    copy.log()
+    grid = copy
     return changed
 }
 
 func round2(grid: inout [[Character]]) -> Bool {
+    var copy = grid
     var changed = false
     for r in 1..<(grid.count - 1)  {
         for c in 1..<(grid[0].count - 1)  {
             guard grid.isFloor(i: r, j: c) == false else { continue }
             if grid.isOccupied(i: r, j: c) && grid.occupiedAdjacentCount(i: r, j: c) >= 4 {
                 changed = true
-                grid[r][c] = "L"
+                copy[r][c] = "L"
             }
         }
     }
-    grid.log()
+//    copy.log()
+    grid = copy
     return changed
 }
 
-round1(grid: &grid)
-round2(grid: &grid)
+//round1(grid: &grid)
+//round2(grid: &grid)
 
-//while round1(grid: &grid) && round2(grid: &grid) {
-//    print("Apply!")
-//}
+while round1(grid: &grid) && round2(grid: &grid) {
+    print("Apply!")
+}
 
 print("Done")
+
+var ocCount = 0
+for r in 1..<(grid.count - 1)  {
+    for c in 1..<(grid[0].count - 1)  {
+        if grid.isOccupied(i: r, j: c) { ocCount += 1 }
+    }
+}
+
+print(ocCount)
