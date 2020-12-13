@@ -9,6 +9,8 @@ enum Direction {
 final class Ship {
     var x = 0
     var y = 0
+    var waypointX = 10
+    var waypointY = 1
     var manhattanDistance: Int { abs(x) + abs(y) }
     let directions: [Direction] = [.east, .south, .west, .north]
     
@@ -21,23 +23,32 @@ final class Ship {
             let value = Int(s)!
             switch action {
             case "F":
-                move(value, direction: directions[currentD])
+                x += value * waypointX
+                y += value * waypointY
             case "N":
-                move(value, direction: .north)
+                moveWayPoint(value, direction: .north)
             case "S":
-                move(value, direction: .south)
+                moveWayPoint(value, direction: .south)
             case "E":
-                move(value, direction: .east)
+                moveWayPoint(value, direction: .east)
             case "W":
-                move(value, direction: .west)
+                moveWayPoint(value, direction: .west)
             case "R":
                 let count = value / 90
-                currentD = (currentD + count) % directions.count
+                for _ in 1...count {
+                    let x = waypointX
+                    let y = waypointY
+                    waypointX = y
+                    waypointY = -x
+                }
+//                currentD = (currentD + count) % directions.count
             case "L":
                 let count = value / 90
-                currentD -= count
-                if currentD < 0 {
-                    currentD += directions.count
+                for _ in 1...count {
+                    let x = waypointX
+                    let y = waypointY
+                    waypointX = -y
+                    waypointY = x
                 }
             default:
                 assertionFailure("unexpected input")
@@ -50,6 +61,15 @@ final class Ship {
         case .west: x -= v
         case .north: y += v
         case .south: y -= v
+        }
+    }
+    
+    func moveWayPoint(_ v: Int, direction: Direction) {
+        switch direction {
+        case .east: waypointX += v
+        case .west: waypointX -= v
+        case .north: waypointY += v
+        case .south: waypointY -= v
         }
     }
 }
